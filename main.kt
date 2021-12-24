@@ -1,37 +1,56 @@
-fun main(args: Array<String>) {
-    val map = NewHashMap()
-    map["value1"] = 1
-    map["value2"] = 2
-    map["value3"] = 3
-    map["1"] = 10
-    map["2"] = 20
-    map["3"] = 30
-    map["(1, 5)"] = 100
-    map["(5, 5)"] = 200
-    map["(10, 5)"] = 300
-    map["(1, 5, 3)"] = 400
-    map["(5, 5, 4)"] = 500
-    map["(10, 5, 5)"] = 600
+import java.lang.StringBuilder
 
-    println(map.ploc["<3"]) // >>> {1=10, 2=20}
-    println(map.ploc[">=1"]) // >>> {1=10, 2=20, 3=30}
-    println(map.ploc[">=10, >0"]) // >>> {(10, 5)=300}
-    println(map.ploc["<5, >=5, >=3"]) // >>> {(1, 5, 3)=400}
+fun isNumber(s: String): Boolean {
+    if (s.isEmpty()) return false
+    for (symbol in s){
+        if (!symbol.isDigit()){
+            return false
+        }
+    }
+    return true
 }
-
-fun iloc(){
-    val map = NewHashMap()
-    map["value1"] = 1
-    map["value2"] = 2
-    map["value3"] = 3
-    map["1"] = 10
-    map["2"] = 20
-    map["3"] = 30
-    map["1, 5"] = 100
-    map["5, 5"] = 200
-    map["10, 5"] = 300
-
-    println(map.iloc[0])  // >>> 10
-    println(map.ikloc[0])  // >>> 1
-
+fun main(args: Array<String>) {
+    val ops = arrayOf("+","-","*","/")
+    print("Please input expression separated by space: ")
+    val answer = readLine()
+    val parts = answer?.split(' ')
+    val stack = mutableListOf<Double>()
+    val result = mutableListOf<String>()
+    val stack_operand = mutableListOf<String>()
+    var count_op = 0
+    var count_numb = 0
+    if (!parts.isNullOrEmpty()){
+        for (part in parts){
+            if (part in ops){ //если операция
+                stack_operand.add(part)
+                count_op++
+            }else { //если число
+                if (isNumber(part)) {
+                    count_numb++
+                    stack.add(part.toDouble())
+                } else {
+                    println("Wrong expression!")
+                    break
+                }
+            }
+        }
+    }
+    var i = -1
+    var size_i = (stack.size + stack_operand.size) / 2
+    if (count_numb != count_op + 1){
+        println("Wrong expression!")
+    }
+    else{
+        if (!stack.isNullOrEmpty() && !stack_operand.isNullOrEmpty()) {
+            for (n in 1..size_i) {
+                i++
+                result.add(stack[i].toString())
+                result.add(stack_operand[i])
+            }
+            result.add(stack[i+1].toString())
+        }
+        var result_size = result.size
+        for (n in 0..result_size-1)
+            print(result[n]+" ")
+    }
 }
